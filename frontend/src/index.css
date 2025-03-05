@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+
+@font-face {
+    font-family: 'Rabbid Highway Sign II Hop Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Rabbid Highway Sign II Hop Regular'), url('fonts/RabbidHighwaySignIIHop.woff') format('woff');
+}
+
+
+
+.logo-text {
+    font-family: 'Rabbid Highway Sign II Hop Regular';
+    font-weight: normal;
+}
