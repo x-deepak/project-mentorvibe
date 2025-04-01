@@ -1,0 +1,153 @@
+
+.searchpage {
+  display: flex;
+  justify-content: start;
+  background-image: none;
+  background-position: right top;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: var(--color-base-bg);
+  color: var(--color-base-text);
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+}
+
+
+.main-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 1300px;
+  gap: 20px;
+  padding-top: 20px;
+
+
+}
+
+.search-title{
+  font-size: 40px;
+} 
+
+.main-content{
+  display: flex;
+  border: 2px solid red;
+
+
+}
+
+.filters{
+  padding: 20px;
+  font-size: 18px;
+  width: 500px;
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  
+}
+
+.filters span{
+  background-color: #5555557e;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+
+.card-container{
+  border: 2px solid red;
+
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Space between cards */
+  justify-content: center; /* Centers items inside the container */
+  padding: 10px; /* Adjust as needed */
+}
+
+.user-profile-card {
+  width: 300px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: white;
+}
+
+.profile-image-container {
+  position: relative;
+}
+
+.profile-image-wrapper {
+  /* height: 256px; */
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-image {
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.3s ease;
+}
+
+.user-profile-card:hover .profile-image {
+  transform: scale(1.2);
+  transition: transform 0.3s ease-in-out;
+}
+
+
+.name-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  /* background-color: rgba(0, 0, 0, 0.5); */
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent);
+  padding: 16px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.profile-name {
+  color: white;
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.profile-profession {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.875rem;
+  margin: 4px 0 0;
+}
+
+.profile-bio {
+  font-size: 14px;
+  padding: 8px;
+  padding-top: 2px;
+  height: 53px;
+  line-height: 24px;
+}
+
+.profile-bio-text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0;
+ 
+
+}
+
+.profile-details{
+  font-weight: 600;
+  font-size: 13px;
+  padding: 2px 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.profile-rating-star{
+  color: gold;
+}

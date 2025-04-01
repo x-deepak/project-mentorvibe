@@ -10,7 +10,33 @@
 
 
 
-.logo-text {
-    font-family: 'Rabbid Highway Sign II Hop Regular';
-    font-weight: normal;
+:root {
+    --border-btn: 1px solid rgb(36, 36, 36);
+    --color-base-bg: rgb(240, 240, 240);
+    --color-base-text: rgb(18, 18, 18);
+    --color-btn-bg: rgb(220, 220, 220);
+    --theme-name: "light";
+    --greyish-text: #686868;
+    --logo-text-color: #79DCAF;
+    --logo-text-color-inv: #6A55E2;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --border-btn: 1px solid rgb(220, 220, 220);
+        --color-base-bg: rgb(18, 18, 18);
+        --color-base-text: rgb(240, 240, 240);
+        --color-btn-bg: rgb(36, 36, 36);
+        --theme-name: "dark";
+        --greyish-text: #adb5bd;
+        --logo-text-color: #6A55E2;
+        --logo-text-color-inv: #79DCAF;
+    }
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }

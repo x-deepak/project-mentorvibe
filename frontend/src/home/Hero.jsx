@@ -1,19 +1,35 @@
-import Search from "./Search"
+
+import { useState } from 'react';
 import dotsImg from '../assets/dots.png';
 import homeBannerImg from '../assets/home-banner.png'
 
+import style from './Home.module.css'
+import { useNavigate } from 'react-router-dom';
+
 export function Hero() {
+
+    const [query, setQuery] = useState("");
+    const navigate = useNavigate();
+
+    const handleSearch = (e) => {
+        e?.preventDefault();
+        if (query.trim()) {
+            navigate(`/search?q=${encodeURIComponent(query)}`);
+        }
+    };
+
+    const focusSearch = () => {
+        document.querySelector(".focus-me").focus();
+    }
+
     return (
         <>
-            <div className="hero-container">
-                <div className="hero-text">
-                    <img src={dotsImg} alt="" className="dots" />
-                    <p className="hero-title">Discover Your Perfect Skill Mentor</p>
-                    <p className="hero-info">Transform your career with personalized mentorship that connects you with experts in your field to guide you.</p>
-                    <form action="" className="search-container">
-                        <input type="text" className="search-input" placeholder="Search..." />
-                        <button className="search-button">Search</button>
-                    </form>
+            <div className={style["hero-container"]}>
+                <div className={style["hero-text"]}>
+                    <img src={dotsImg} alt="" className={style["dots"]} />
+                    <p className={style["hero-title"]}>Discover Your Perfect Skill Mentor</p>
+                    <p className={style["hero-info"]}>Transform your career with personalized mentorship that connects you with experts in your field to guide you.</p>
+                    <button className={style["normal-button"]} onClick={focusSearch}>Search</button>
                 </div>
                 <img src={homeBannerImg} alt="" />
             </div>

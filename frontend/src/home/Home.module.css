@@ -1,36 +1,10 @@
-@import "tailwindcss";
 
-
-:root {
-    --border-btn: 1px solid rgb(36, 36, 36);
-    --color-base-bg: rgb(240, 240, 240);
-    --color-base-text: rgb(18, 18, 18);
-    --color-btn-bg: rgb(220, 220, 220);
-    --theme-name: "light";
-    --greyish-text: #686868;
-    --logo-text-color: #79DCAF;
+.logo-text {
+    font-family: 'Rabbid Highway Sign II Hop Regular';
+    font-weight: normal;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --border-btn: 1px solid rgb(220, 220, 220);
-        --color-base-bg: rgb(18, 18, 18);
-        --color-base-text: rgb(240, 240, 240);
-        --color-btn-bg: rgb(36, 36, 36);
-        --theme-name: "dark";
-        --greyish-text: #adb5bd;
-        --logo-text-color: #6A55E2;
-    }
-}
-
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-#root {
+.homepage {
     display: grid;
     grid-template-columns: 100%;
 
@@ -40,13 +14,16 @@
 }
 
 .home {
-    background-image: url('./assets/home-bg.png');
+    background-image: url('../assets/home-bg.png');
     background-position: right top;
     background-repeat: no-repeat;
     background-size: contain;
     background-color: var(--color-base-bg);
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    gap: 150px;
 
 }
 
@@ -60,7 +37,7 @@
 }
 
 .services{
-    background-image: url('./assets/bg2.png');
+    background-image: url('../assets/bg2.png');
     background-position: left top;
     background-repeat: no-repeat;
     background-color: var(--color-base-bg);
@@ -69,7 +46,7 @@
 }
 
 .features{
-    background-image: url('./assets/bg3.png');
+    background-image: url('../assets/bg3.png');
     background-position: right top;
     background-repeat: no-repeat;
     background-color: var(--color-base-bg);
@@ -78,7 +55,7 @@
 }
 
 .testimonials{
-    background-image: url('./assets/bg2.png');
+    background-image: url('../assets/bg2.png');
     background-position: left bottom;
     background-repeat: no-repeat;
     background-color: var(--color-base-bg);
@@ -87,7 +64,7 @@
 }
 
 .footer{
-    background-image: url('./assets/footer-bg.png');
+    background-image: url('../assets/footer-bg.png');
     background-position: bottom;
     background-repeat: no-repeat;
     /* background-size: 10%; */
@@ -243,38 +220,101 @@
 }
 
 .header {
+
+    background-color: #0F2B43;
     color: var(--color-base-text);
     /* background-color: #ffffff; */
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 10px;
+    padding: 0px 300px;
     font-size: x-large;
     flex-grow: 0;
     width: 100%;
     /* max-height: 80px; */
-    height: 90px;
-    border-bottom: 2px solid var(--color-base-text);
+    /* height: min-content; */
+    /* border-bottom: 2px solid var(--color-base-text); */
 }
 
 .logo-container {
     display: flex;
     align-content: center;
-
+    color: var(--logo-text-color);
+    padding-bottom: 4px;
 }
 
+.logo-container:hover{
+    color: var(--logo-text-color-inv);
+}
+
+
 .logo-img {
-    height: 70px;
+    height: 46px;
 }
 
 .logo-text {
-    font-size: 60px;
+    font-size: 50px;
     display: flex;
     align-items: center;
     line-height: 0px;
-    color: var(--logo-text-color);
+    color: inherit;
 }
 
+.search-container {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    padding: 10px 4px;
+
+}
+
+.search-form{
+    display: flex;
+    width: 500px;
+    border-radius: 12px;
+    /* border: 3px solid;
+    border-color: red; */
+
+}
+
+.search-form:focus-within{
+    /* border-color: red; */
+     box-shadow: 0 0 10px  #00ffff;
+     animation: glow 1s infinite alternate;
+    
+}
+
+.search-input {
+
+    box-sizing: border-box;
+    cursor:text;
+    border: none;
+    outline: none;
+    padding: 8px 10px 9px 10px ;
+    width: 100%;
+    font-size: 15px;
+    border-radius: 10px 0 0 10px;
+    background: white;
+    color: black;
+}
+
+.search-button {
+    background: #F7CA63;
+    color: black;
+    padding: 7px 10px 6px 10px ;
+    border: none;
+    border-radius: 0 10px 10px 0;
+    cursor:pointer;
+    transition: background 0.3s ease;
+    font-size: 18px;
+}
+
+.search-button:hover {
+    color: white;
+}
 
 ul {
     display: flex;
@@ -287,19 +327,24 @@ ul {
 .nav-links {
     display: flex;
     gap: 27px;
-}
-
-.header-link{
-    padding: 10px 20px;
+    padding: 8px 22px;
+    font-size: 16px;
+    color: white;
     font-weight: 700;
+    background-color: #133858;
+    border-radius: 12px;
+    margin: auto 0;
 }
 
-.header-link:hover{
-    background-color: white;
-    color: black;
-    border-radius: 20px;
+.nav-links:hover{
+    background-color: #174770;
 
 }
+
+/* .header-link{
+    
+} */
+
 
 
 .hero-container {
@@ -311,7 +356,7 @@ ul {
 }
 
 .hero-container>img {
-    height: 50%;
+    width: 550px;
 
 }
 
@@ -339,49 +384,6 @@ ul {
     color:  var(--greyish-text);
 }
 
-.search-container {
-    display: flex;
-    align-items: center;
-    background: var(--greyish-text);
-    background: #F7CA63;
-    padding: 8px;
-    border-radius: 25px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    height: 80px;
-    padding: 12px;
-    border-radius: 50px;
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-    width: 500px;
-    margin-left: -24px;
-    margin-top: 30px;
-}
-
-.search-input {
-    border: none;
-    outline: none;
-    padding: 15px;
-    width: 100%;
-    font-size: 20px;
-    border-radius: 50px 0 0 50px;
-    background: var(--color-base-bg);
-    color: var(--color-base-text);
-}
-
-.search-button {
-    background: #F7CA63;
-    color: black;
-    border: none;
-    padding: 15px 30px;
-    border-radius: 0 50px 50px 0;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    font-size: 22px;
-}
-
-.search-button:hover {
-    background: #79DCAF;
-    color: white;
-}
 
 .normal-button {
     background: #F7CA63;
@@ -399,15 +401,11 @@ ul {
     color: white;
 }
 
-.fa-check-circle{
+.fc{
     color: #6A55E2;
     margin-right: 5px;
 }
 
-.fa-solid:hover{
-    color: #79DCAF;
-    font-size: large;
-}
 
 .team-names> span{
     padding: 7px;
