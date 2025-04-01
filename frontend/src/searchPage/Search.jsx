@@ -35,7 +35,6 @@ function Filters(props) {
 }
 
 
-
 function Search() {
     // const [location, setLocation] = useState(null);
     // const [skill, setSkill] = useState(null);
@@ -46,6 +45,8 @@ function Search() {
     // const [distance, setDistance] = useState(50);
 
     // const [maxFee, setMaxFee] = useState(5000);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const [searchParams] = useSearchParams();
     const query = searchParams.get("q");
@@ -54,26 +55,19 @@ function Search() {
     // const [results, setResults] = useState([]);
     const results = [];
 
-    // const [error, setError] = useState(null);
-    // const [loading, setLoading] = useState(true);
-
     useEffect(() => {
-        console.log("Component Mounted - Query:", searchParams.get("q"));
-    }, [searchParams]);
-
-    // useEffect(() => {
-    //     fetch("https://jsonplaceholde", { mode: "cors", method: "GET" })
-    //         .then((response) => {
-    //             if (response.status >= 400) {
-    //                 throw new Error("server error");
-    //             }
-    //             console.log("Response: ",response.json);
-    //             return response.json();
-    //         })
-    //         .then((response) => setProfileCards([...profileCards, ...response]))
-    //         .catch((error) => setError(error))
-    //         .finally(() => setLoading(false));
-    // }, []);
+        fetch("https://jsonplaceholde", { mode: "cors", method: "GET" })
+            .then((response) => {
+                if (response.status >= 400) {
+                    throw new Error("server error");
+                }
+                console.log("Response: ",response.json);
+                return response.json();
+            })
+            .then((response) => setProfileCards([...profileCards, ...response]))
+            .catch((error) => setError(error))
+            .finally(() => setLoading(false));
+    }, []);
 
     return (
         <div className={styles.searchpage}>
@@ -105,7 +99,7 @@ function CardContainer({ results, loading, error }) {
                 <ProfileCard
                     imageUrl={dp}
                     name="Jane Smith"
-                    mode="Online & offline"
+                    mode = "In-person/Online"
                     bio="Creative problem solver with a passion for user-centered design. Dedicated to crafting intuitive and engaging digital experiences."
                 />
                 <ProfileCard
@@ -132,12 +126,7 @@ function CardContainer({ results, loading, error }) {
                     mode="Online & offline"
                     bio="Creative problem solver with a passion for user-centered design. Dedicated to crafting intuitive and engaging digital experiences."
                 />
-                <ProfileCard
-                    imageUrl={dp}
-                    name="Jane Smith"
-                    mode="Online & offline"
-                    bio="Creative problem solver with a passion for user-centered design. Dedicated to crafting intuitive and engaging digital experiences."
-                />
+
             </div>
         </>
     )
@@ -150,11 +139,12 @@ function CardContainer({ results, loading, error }) {
 const ProfileCard = ({
     imageUrl = "/api/placeholder/400/400",
     name = "John Doe",
-    mode = "Online & offline",
+    mode = "In-person/Offline",
     bio = "Passionate about creating innovative solutions and solving complex problems. Committed to continuous learning and professional growth.",
     rating = 4.9,
     fee = 2000,
     dist = 10,
+    city = "Allahabad City",
 
 }) => {
     return (
@@ -169,17 +159,20 @@ const ProfileCard = ({
                     />
                     <div className={styles["name-overlay"]}>
                         <h2 className={styles["profile-name"]}>{name}</h2>
-                        <p className={styles["profile-profession"]}>{mode}</p>
+                        <div className={styles["profile-details"]}>
+
+                            <span>{city} ({mode})</span>
+                            <span>₹{fee}/hr</span>
+                        </div>
+                    </div>
+                    <div className={styles["top-overlay"]}>
+                            <span>
+                                <FontAwesomeIcon icon={faStar} className={styles["profile-rating-star"]} />
+                                {rating}
+                            </span>
+                            <span>{dist}km</span>
                     </div>
                 </div>
-            </div>
-            <div className={styles["profile-details"]}>
-                <span>
-                    <FontAwesomeIcon icon={faStar} className={styles["profile-rating-star"]} />
-                    {rating}
-                </span>
-                <span>₹{fee}/hr</span>
-                <span>{dist}km</span>
             </div>
 
             <div className={styles["profile-bio"]}>
