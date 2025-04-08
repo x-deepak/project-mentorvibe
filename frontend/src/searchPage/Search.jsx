@@ -10,12 +10,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 
 
-function SearchTitle(props) {
+function SearchTitle({ query }) {
+
+    // const title_start = (query)? query.charAt(0).toUpperCase() + query.slice(1) : null;
 
     return (
         <>
             <h1 className={styles["search-title"]}>
-                {props.skill} Tutors {(props.location == null) ? "Nearby" : "in " + props.location}
+                {/* {title_start}  */}
+                Tutors Around You
             </h1>
         </>
     )
@@ -26,9 +29,10 @@ function Filters(props) {
     return (
         <>
             <div className={styles["filters"]}>
+                <span> Rating</span>
+                <span> Fee</span>
                 <span> Mode</span>
                 <span> Distance</span>
-                <span> Fee</span>
             </div>
         </>
     )
@@ -36,47 +40,62 @@ function Filters(props) {
 
 
 function Search() {
-    // const [location, setLocation] = useState(null);
-    // const [skill, setSkill] = useState(null);
-
-    // const [online, setOnline] = useState(true);
-    // const [offline, setOffline] = useState(true);
-
-    // const [distance, setDistance] = useState(50);
-
-    // const [maxFee, setMaxFee] = useState(5000);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const [mentors, setMentors] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true);
 
-    const [searchParams] = useSearchParams();
-    const query = searchParams.get("q");
+    // Controlled filter state based on URL
+    const query = searchParams.get("query") || null;
+    const mode = searchParams.get("mode") || 0;
+    const distance = parseInt(searchParams.get("distance")) || 50000;    //in meters
+    const maxFee = parseInt(searchParams.get("fee")) || 5000;
 
-    // console.log("qery baby", searchParams.get("q"));
-    // const [results, setResults] = useState([]);
-    const results = [];
+
+    const updateFilters = (updates) => {
+        const newParams = new URLSearchParams(searchParams.toString());
+        Object.entries(updates).forEach(([key, value]) => {
+          if (value === null || value === undefined) {
+            newParams.delete(key);
+          } else {
+            newParams.set(key, value);
+          }
+        });
+        setSearchParams(newParams);
+      };
 
     useEffect(() => {
-        fetch("https://jsonplaceholde", { mode: "cors", method: "GET" })
-            .then((response) => {
-                if (response.status >= 400) {
-                    throw new Error("server error");
-                }
-                console.log("Response: ",response.json);
-                return response.json();
-            })
-            .then((response) => setProfileCards([...profileCards, ...response]))
-            .catch((error) => setError(error))
-            .finally(() => setLoading(false));
-    }, []);
+        const fetchMentors = async () => {
+            setLoading(true);
+            setError(null);
+            
+            const apiParams = new URLSearchParams(searchParams.toString());
+
+
+            try {
+              const response = await fetch(`http://localhost:3000/mentor?${apiParams.toString()}`, { mode: "cors", method: "GET" });
+
+              if (!response.ok) throw new Error("Failed to fetch mentors");
+              const data = await response.json();
+              console.log(data)
+              setMentors(data);
+            } catch (err) {
+              setError(err.message || "Something went wrong");
+            } finally {
+              setLoading(false);
+            }
+          };
+          fetchMentors();
+    }, [searchParams]);
 
     return (
         <div className={styles.searchpage}>
             <Header />
             <div className={styles["main-content-wrapper"]}>
-                <SearchTitle location={"bangalore"} skill={"Yoga"} />
+                <SearchTitle query={query} />
                 <div className={styles["main-content"]}>
                     <Filters />
-                    <CardContainer results={results}></CardContainer>
+                    <CardContainer {...{ mentors, loading, error }} />
                 </div>
             </div>
         </div>
@@ -85,47 +104,20 @@ function Search() {
 
 import dp from '../assets/profile/card-sample.jpg';
 
-function CardContainer({ results, loading, error }) {
+function CardContainer({ mentors, loading, error }) {
 
 
 
-    if (loading) return <div className='card-container'><p>Loading...</p></div>;
-    if (error) return <div className='card-container'><p>A network error was encountered</p></div>;
+    if (loading) return <div className={styles['card-container']}><p>Loading...</p></div>;
+    if (error) return <div className={styles['card-container']}><p>{error}</p></div>;
 
     return (
         <>
             <div className={styles['card-container']}>
 
-                <ProfileCard
-                    imageUrl={dp}
-                    name="Jane Smith"
-                    mode = "In-person/Online"
-                    bio="Creative problem solver with a passion for user-centered design. Dedicated to crafting intuitive and engaging digital experiences."
-                />
-                <ProfileCard
-                    imageUrl={dp}
-                    name="Jane Smith"
-                    mode="Online & offline"
-                    bio="Creative problem solver with a passion for user-centered design. Dedicated to crafting intuitive and engaging digital experiences."
-                />
-                <ProfileCard
-                    imageUrl={dp}
-                    name="Jane Smith"
-                    mode="Online & offline"
-                    bio="Creative problem solver with a passion for user-centered design. Dedicated to crafting intuitive and engaging digital experiences."
-                />
-                <ProfileCard
-                    imageUrl={dp}
-                    name="Jane Smith"
-                    mode="Online & offline"
-                    bio="Creative problem solver with a passion for user-centered design. Dedicated to crafting intuitive and engaging digital experiences."
-                />
-                <ProfileCard
-                    imageUrl={dp}
-                    name="Jane Smith"
-                    mode="Online & offline"
-                    bio="Creative problem solver with a passion for user-centered design. Dedicated to crafting intuitive and engaging digital experiences."
-                />
+            {mentors.map(mentor => (
+            <ProfileCard key={mentor._id} mentor={ mentor} />
+          ))}
 
             </div>
         </>
@@ -136,17 +128,14 @@ function CardContainer({ results, loading, error }) {
 
 
 
-const ProfileCard = ({
-    imageUrl = "/api/placeholder/400/400",
-    name = "John Doe",
-    mode = "In-person/Offline",
-    bio = "Passionate about creating innovative solutions and solving complex problems. Committed to continuous learning and professional growth.",
-    rating = 4.9,
-    fee = 2000,
-    dist = 10,
-    city = "Allahabad City",
+const ProfileCard = ( {mentor} ) => {
 
-}) => {
+    const imageUrl = dp;
+    
+    const distance = (mentor.distance)? (mentor.distance/1000).toFixed(1) : null;
+
+
+
     return (
         <div className={styles["user-profile-card"]}>
             <div className={styles["profile-image-container"]}>
@@ -158,25 +147,26 @@ const ProfileCard = ({
                         style={{ backgroundImage: `url(${imageUrl})` }}
                     />
                     <div className={styles["name-overlay"]}>
-                        <h2 className={styles["profile-name"]}>{name}</h2>
+                        <h2 className={styles["profile-name"]}>{mentor.name}</h2>
                         <div className={styles["profile-details"]}>
 
-                            <span>{city} ({mode})</span>
-                            <span>₹{fee}/hr</span>
+                            <span>{mentor.city} ({mentor.teachingMode})</span>
+                            <span>₹{mentor.fee}/hr</span>
                         </div>
                     </div>
                     <div className={styles["top-overlay"]}>
                             <span>
                                 <FontAwesomeIcon icon={faStar} className={styles["profile-rating-star"]} />
-                                {rating}
+                                {mentor.averageRating}
                             </span>
-                            <span>{dist}km</span>
+                            <span>{distance? distance+"km" : null }</span>
+                            
                     </div>
                 </div>
             </div>
 
             <div className={styles["profile-bio"]}>
-                <p className={styles["profile-bio-text"]}>{bio}</p>
+                <p className={styles["profile-bio-text"]}>{mentor.classDetails}{mentor.classDetails}</p>
             </div>
         </div>
 
