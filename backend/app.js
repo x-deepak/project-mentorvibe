@@ -3,14 +3,18 @@ const path = require("node:path");
 require('dotenv').config()
 
 const express = require("express");
-const app = express();
+const mongoose = require('mongoose');
+const passport = require('passport');
+require('./config/passport');
 
 const cors = require("cors");
-app.use(cors());
+const cookieParser = require('cookie-parser');
+const authRoutes = require('./routes/auth');
 
 
-const mongoose = require('mongoose');
+const app = express();
 
+// Database Connection
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
 const clientOptions = {
@@ -25,26 +29,46 @@ async function run() {
 }
 
 run().catch(console.dir);
-
 //insert new data - comment this  after use --> [IMPORTANT]
-
 // const insertData = require("./models/insertData");
 // insertData();
+
+
+
+// Middleware
+
+// Middleware to parse JSON bodies
+app.use(express.json());
+
+// Middleware to parse URL-encoded bodies (for form submissions)
+app.use(express.urlencoded({ extended: true }));
+
+app.use(cookieParser());
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(passport.initialize());
 
 
 const assetsPath = path.join(__dirname, "public");
 app.use(express.static(assetsPath));
 
 
+// Routes
+
 app.get("/", (req, res) => {
   res.send("Hello World - Express Server");
 });
 
 
-
 const searchRouter = require("./routes/searchRouter");
-app.use("/mentor", searchRouter);
+app.use("/api/mentor", searchRouter);
 
+
+app.use('/api/auth', authRoutes);
+
+// Protected route example
+app.get('/api/protected', require('./middleware/auth'), (req, res) => {
+  res.json({ message: 'This is a protected route', user: req.user });
+});
 
 
 // Every thrown error in the application or the previous middleware function calling `next` with an error as an argument will eventually go to this middleware function

@@ -1,10 +1,16 @@
 const mongoose = require("mongoose");
+const bcrypt = require('bcrypt');
 
 const MentorSchema = new mongoose.Schema(
     {
         name: { type: String, required: true },
         email: { type: String, required: true, unique: true },
-        password: { type: String, required: true },
+        password: { type: String },
+        googleId: { type: String },
+        isVerified: {
+            type: Boolean,
+            default: false,
+        },
         skills: [{ type: String, required: true }], // Example: ["JavaScript", "Python"]
         teachingMode: {
             type: String,
@@ -25,6 +31,26 @@ const MentorSchema = new mongoose.Schema(
     { timestamps: true }
 );
 
+// Password hashing middleware
+MentorSchema.pre('save', async function(next) {
+    if (!this.isModified('password') || !this.password) return next();
+    
+    try {
+      const salt = await bcrypt.genSalt(10);
+      this.password = await bcrypt.hash(this.password, salt);
+      next();
+    } catch (error) {
+      next(error);
+    }
+  });
+  
+  // Password verification method
+  MentorSchema.methods.comparePassword = async function(candidatePassword) {
+    if (!this.password) return false;
+    return await bcrypt.compare(candidatePassword, this.password);
+  };
+
+  
 // Calculate average rating dynamically
 MentorSchema.methods.calculateAverageRating = function () {
     if (this.ratings.length === 0) return 0;
