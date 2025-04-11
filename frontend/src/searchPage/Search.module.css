@@ -10,7 +10,7 @@
   color: var(--color-base-text);
   flex-direction: column;
   align-items: center;
-  height: 100vh;
+  height: calc(100vh - 60px);
 }
 
 

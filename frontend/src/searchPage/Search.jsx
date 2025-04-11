@@ -73,7 +73,7 @@ function Search() {
 
 
             try {
-              const response = await fetch(`http://localhost:3000/mentor?${apiParams.toString()}`, { mode: "cors", method: "GET" });
+              const response = await fetch(`/api/mentor?${apiParams.toString()}`, { mode: "cors", method: "GET" });
 
               if (!response.ok) throw new Error("Failed to fetch mentors");
               const data = await response.json();
@@ -90,7 +90,6 @@ function Search() {
 
     return (
         <div className={styles.searchpage}>
-            <Header />
             <div className={styles["main-content-wrapper"]}>
                 <SearchTitle query={query} />
                 <div className={styles["main-content"]}>

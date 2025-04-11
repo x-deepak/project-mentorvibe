@@ -1,0 +1,31 @@
+.app-container {
+    display: flex;
+  }
+  
+  .sidebar {
+    width: 200px;
+    background-color: #f0f0f0;
+    padding: 20px;
+  }
+  
+  .content {
+    padding: 20px;
+    flex-grow: 1;
+  }
+  
+  .analytics {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .card {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+    flex: 1;
+  }
+  
+  h2 {
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+  }

@@ -1,5 +1,5 @@
 
-import Header from './Header.jsx'
+
 import { Hero } from './Hero.jsx';
 import advCareer from '../assets/advance-career.png';
 import findOut from '../assets/find-out.png';
@@ -16,7 +16,6 @@ function Home() {
         <>
             <div className={style.homepage}>
                 <div className={style.home}>
-                    <Header />
                     <div className={style["home-container"]}>
                         <Hero />
                     </div>
