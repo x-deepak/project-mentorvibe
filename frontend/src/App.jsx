@@ -21,7 +21,7 @@ import Home from "./home/Home";
 import Search from "./searchPage/Search";
 import ErrorPage from "./ErrorPage";
 
-
+import DMain from './dashboard/Main.jsx';
 
 const App = () => {
   return (
@@ -35,8 +35,12 @@ const App = () => {
           <main className="main-content">
             <Routes>
               <Route path="/" element={<Home />} errorElement={<ErrorPage />} />
-              <Route path="/search" element={<Search />} />
+              <Route path="/mentor/search" element={<Search />} />
               <Route path="/auth-success" element={<GoogleAuthSuccess />} />
+              <Route path="/learner/dashboard/*" element={<DMain />} />
+
+              
+              
               
               {/* Protected Routes */}
 

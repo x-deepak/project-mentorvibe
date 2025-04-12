@@ -36,7 +36,7 @@ const Header = () => {
     const handleSearch = (e) => {
         e?.preventDefault();
         if (query.trim()) {
-            navigate(`/search?query=${encodeURIComponent(query)}`);
+            navigate(`/mentor/search?query=${encodeURIComponent(query)}`);
         }
     };
     return (

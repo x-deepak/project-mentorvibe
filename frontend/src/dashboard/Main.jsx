@@ -3,17 +3,17 @@ import { Route, Routes } from 'react-router-dom';
 import Dashboard from './Dashboard';
 import Messages from './Messages';
 import Profile from './Profile';
-import Sidebar from './Sidebar';
+import BasicTabs from './Tabs';
 import './styles.css';
 
-const App = () => {
+const DMain = () => {
   return (
-    <div className="app-container">
-      <Sidebar />
-      <div className="content">
+    <div className="dashpage">
+      <BasicTabs />
+      <div className='content'>
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/messages" element={<Messages />} />
+          <Route path="/message" element={<Messages />} />
           <Route path="/profile" element={<Profile />} />
         </Routes>
       </div>
@@ -21,4 +21,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default DMain;
