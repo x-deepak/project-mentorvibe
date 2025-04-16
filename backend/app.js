@@ -30,10 +30,10 @@ async function run() {
 
 run().catch(console.dir);
 //insert new data - comment this  after use --> [IMPORTANT]
-// const insertData = require("./models/insertData");
-// insertData();
+const  {insertSampleRating, insertData, insertData3 } = require("./models/insertData");
+// insertSampleRating();
 
-
+// insertData3();
 
 // Middleware
 
@@ -60,7 +60,7 @@ app.get("/", (req, res) => {
 
 
 const searchRouter = require("./routes/searchRouter");
-app.use("/api/mentor", searchRouter);
+app.use("/api/search", searchRouter);
 
 
 app.use('/api/auth', authRoutes);

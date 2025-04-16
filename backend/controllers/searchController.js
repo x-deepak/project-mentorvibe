@@ -1,9 +1,9 @@
-
 const asyncHandler = require("express-async-handler");
 
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
 
 const Mentor = require("../models/Mentor")
+const User = require("../models/User");
 
 Mentor.syncIndexes().then(() => {
   console.log("Indexes synced for Mentor collection");
@@ -28,7 +28,7 @@ const getMentors = asyncHandler(async (req, res) => {
   const mode = usermode || 0;
   const limit = 6;
   const skip = (page ? page - 1 : 0) * limit;
-  const maxDistance = distance || 50000;
+  const maxDistance = parseInt(distance) || 50000;
 
   const filters = {};
 
@@ -37,8 +37,11 @@ const getMentors = asyncHandler(async (req, res) => {
 
   const pipeline = [];
 
+  console.log("location :",lon, lat);
+
   if (mode >= 1 && lon && lat) {
 
+    console.log("mode 2 triggerd");
     const userLocation = {
       type: "Point",
       coordinates: [parseFloat(lon), parseFloat(lat)]       // GeoJSON format is [longitude, latitude]
@@ -50,19 +53,19 @@ const getMentors = asyncHandler(async (req, res) => {
     //   $match: filters
     // };
 
-    if (query){
+    if (query) {
       const matchedMentorIds = await Mentor
-      .find({ $text: { $search: query } }, { _id: 1 })
-      .lean();
+        .find({ $text: { $search: query } }, { _id: 1 })
+        .lean();
 
 
       const idList = matchedMentorIds.map(doc => doc._id);
-      filters._id =  { $in: idList }
+      filters._id = { $in: idList }
 
 
 
     }
-  
+
 
     const location_filter_stage = {
       $geoNear: {
@@ -92,11 +95,11 @@ const getMentors = asyncHandler(async (req, res) => {
     else if (mode == 2) {            // offline + online
 
 
-      const onlineFilters = {...filters};  // Clone the filters object
+      const onlineFilters = { ...filters };  // Clone the filters object
       onlineFilters.teachingMode = { $in: ["Online"] };  // Change only teachingMode in the clone
-  
+
       const union_pipeline = {
-          $match: onlineFilters
+        $match: onlineFilters
       };
 
       const union = {
@@ -124,24 +127,26 @@ const getMentors = asyncHandler(async (req, res) => {
     }
 
   }
-  else if (mode == 0) {        // online only
+  else {      // online only
 
+
+    console.log("mode 0 triggerd");
 
     filters.teachingMode = { $in: ["Online", "Hybrid"] };
 
     if (query) filters["$text"] = { $search: query };
 
-    
+
     const additionalFilters = {
       $match: filters
     };
 
-    const addfield =   {
+    const addfield = {
       $addFields: {
         score: { $meta: "textScore" }
       }
     }
-    const sort_filters =  {
+    const sort_filters = {
       averageRating: -1,
     }
 
@@ -149,9 +154,9 @@ const getMentors = asyncHandler(async (req, res) => {
       $sort: sort_filters
     }
 
-    if (query){
-      sort_filters.score =  { $meta: "textScore" };
-      pipeline.push(additionalFilters,addfield, sort_stage);
+    if (query) {
+      sort_filters.score = { $meta: "textScore" };
+      pipeline.push(additionalFilters, addfield, sort_stage);
     }
 
     else pipeline.push(additionalFilters, sort_stage);
@@ -174,9 +179,9 @@ const getMentors = asyncHandler(async (req, res) => {
 
   pipeline.push(prj);
 
-  pipeline.push({ $skip: skip});
+  pipeline.push({ $skip: skip });
 
-  pipeline.push({ $limit: limit});
+  pipeline.push({ $limit: limit });
 
   const results = await Mentor.aggregate(pipeline);
 
@@ -191,4 +196,57 @@ const getMentors = asyncHandler(async (req, res) => {
 });
 
 
-module.exports = { getMentors };
+
+
+const getMentor = asyncHandler(async (req, res) => {
+
+  const { id } = req.query;
+
+  const mentorId = id;
+  const mentor = await Mentor.findById(mentorId, 'name email professionalTitle profileTitle profilePicture skills teachingMode bio fee classDetails ratings averageRating city studentCount');
+
+  res.send(mentor);
+  return;
+
+});
+
+
+
+
+const getRatings = asyncHandler(async (req, res) => {
+  const { id } = req.query; // Mentor ID
+
+  if (!id) {
+    return res.status(400).json({ message: "Mentor ID is required" });
+  }
+
+  try {
+    // Find the mentor by ID and populate the ratings with user details
+    const mentor = await Mentor.findById(id).populate({
+      path: "ratings.user",
+      model: "User",
+      select: "name profileImage", // Fetch the user's name and profileImage
+    });
+
+    if (!mentor) {
+      return res.status(404).json({ message: "Mentor not found" });
+    }
+
+    // Map the ratings to include user name, profileImage, rating number, and review string
+    const ratings = mentor.ratings.map((rating) => ({
+      userName: rating.user?.name || "Anonymous",
+      profileImage: rating.user?.profileImage || null,
+      rating: rating.rating,
+      review: rating.review,
+    }));
+
+    res.status(200).json(ratings);
+  } catch (error) {
+    console.error("Error fetching ratings:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
+
+module.exports = { getMentors, getMentor, getRatings };

@@ -112,6 +112,6 @@ const ConversationSchema = new Schema({
 ConversationSchema.index({ 'participants.id': 1 }, { unique: true });
 
 const Message = mongoose.model('Message', MessageSchema, "message");
-const Conversation = mongoose.model('Conversation', ConversationSchema, "convo");
+const Conversation = mongoose.model('Conversation', ConversationSchema, "conversation");
 
 module.exports = { Message, Conversation };

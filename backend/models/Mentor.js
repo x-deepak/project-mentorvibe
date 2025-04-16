@@ -11,6 +11,10 @@ const MentorSchema = new mongoose.Schema(
             type: Boolean,
             default: false,
         },
+        professionalTitle: { type: String }, // Example: "Software Engineer"
+        profileTitle: { type: String, default: "Courses taken- All boards including US,AUSTRALIAN,SINGAPORE (Maths & Physics), IIT Foundation courses."}, // Example: "Courses taken- All boards including US,AUSTRALIAN,SINGAPORE (Maths & Physics), IIT Foundation courses."
+        phone: { type: String }, // Example: "+1234567890"
+        profilePicture: { type: String }, // URL to the profile picture
         skills: [{ type: String, required: true }], // Example: ["JavaScript", "Python"]
         teachingMode: {
             type: String,
@@ -22,6 +26,7 @@ const MentorSchema = new mongoose.Schema(
         classDetails: { type: String },
         ratings: [{ user: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, rating: Number, review: String }],
         averageRating: { type: Number, default: 0 },
+        studentCount: { type: Number, default: 0 },
         city: { type: String },
         location: {
             type: { type: String, enum: ["Point"], default: "Point" },
