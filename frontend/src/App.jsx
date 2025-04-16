@@ -19,6 +19,7 @@ import './index.css'
 
 import Home from "./home/Home";
 import Search from "./searchPage/Search";
+import Mentor from "./searchPage/Mentor";
 import ErrorPage from "./ErrorPage";
 
 import DMain from './dashboard/Main.jsx';
@@ -36,22 +37,27 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Home />} errorElement={<ErrorPage />} />
               <Route path="/mentor/search" element={<Search />} />
+              <Route path="/mentor/profile" element={<Mentor />} />
+
               <Route path="/auth-success" element={<GoogleAuthSuccess />} />
-              <Route path="/learner/dashboard/*" element={<DMain />} />
+
+
+
 
               
               
               
               {/* Protected Routes */}
 
-              {/* uncomment from here -> */}
-              {/* <Route path="/user/dashboard" element={
+              <Route path="/learner/dashboard/*" element={
                 <PrivateRoute>
-                  <Dashboard />
+                  <DMain />
                 </PrivateRoute>
               } />
               
-              <Route path="/mentor/dashboard" element={
+              {/* <Route path="/mentor/dashboard/*" element={<DMain />} /> */}
+              {/* uncomment from here -> */}
+              {/* <Route path="/mentor/dashboard" element={
                 <PrivateRoute isMentorRoute={true}>
                   <MentorDashboard />
                 </PrivateRoute>

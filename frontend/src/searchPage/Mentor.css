@@ -1,0 +1,179 @@
+
+.mentor-profile {
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.mentor-profile-container {
+    width: 1060px;
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 30px;
+    padding: 100px 0 80px;
+    position: relative;
+}
+
+.mentor-main-content{
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.mentor-page-title{
+    font-size: 40px;
+    font-weight: 700;
+}
+
+.skill-tags, .location-tags{
+    display: flex;
+    font-size: 14px;
+    font-weight: 500;
+    flex-wrap: wrap;
+    gap: 3px 15px;
+}
+
+.skill-tag{
+    height: 32px;
+    background-color: skyblue;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 24px;
+    border-radius: 40px;
+}
+
+.location-title, .bio-title, .class-details-title, .review-title{
+    margin-top: 30px;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.location-tag{
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 24px;
+    border-radius: 40px;
+    border: 1px solid grey;
+}
+
+.reviews-container{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+
+.review-card{
+    
+    border-radius: 32px;
+    border: 2px solid grey;
+    padding: 24px;
+
+}
+
+.review-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    margin-right: 8px;
+  }
+
+
+.review-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.review-left, .review-right{
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-weight: 700;
+}
+
+.review-right{
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.review-by{
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+/*  */
+
+
+.mentor-right-card{
+    padding: 40px 56px 34px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 40px;
+    height: min-content;
+    position: sticky;
+    top: 50px;
+}
+
+.mentor-profile-avatar{
+    width: 120px;
+    height: 120px;
+    border-radius: 40px;
+}
+
+.mentor-profile-name{
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.mentor-rating-stats{
+    margin-top: -20px;
+}
+
+
+.mentor-card-detail{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.detail-key{
+    font-size: 14px;
+}
+
+.detail-value{
+    font-size: 20px;
+    font-weight: 800;
+}
+
+
+
+
+.contact-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    height: 54px;
+    width: 100%;
+  }
+  
+  .contact-button:hover {
+    background-color: #0056b3;
+  
+  }
+  

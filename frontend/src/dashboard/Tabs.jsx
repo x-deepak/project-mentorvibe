@@ -5,7 +5,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import Dashboard from './Dashboard';
 import Message from './Messages';
-import Profile from './Profile';
+import Account from './Account';
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -40,7 +40,7 @@ export default function BasicTabs() {
     switch (location.pathname) {
       case '/learner/dashboard/message':
         return 1;
-      case '/learner/dashboard/profile':
+      case '/learner/dashboard/account':
         return 2;
       default:
         return 0;
@@ -63,7 +63,7 @@ export default function BasicTabs() {
     } else if (newValue === 1) {
       navigate('/learner/dashboard/message');
     } else if (newValue === 2) {
-      navigate('/learner/dashboard/profile');
+      navigate('/learner/dashboard/account');
     }
   };
 
@@ -73,7 +73,7 @@ export default function BasicTabs() {
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="Dashboard" {...a11yProps(0)} />
           <Tab label="Messages" {...a11yProps(1)} />
-          <Tab label="Profile" {...a11yProps(2)} />
+          <Tab label="Account" {...a11yProps(2)} />
         </Tabs>
       </Box>
     </Box>

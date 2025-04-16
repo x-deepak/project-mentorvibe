@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import defaultAvatar from '../assets/dashboard/dashboard-user-avatar.jpg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
@@ -11,13 +11,25 @@ const Messages = () => {
   ];
 
   const [selectedMentor, setSelectedMentor] = useState(mentors[0]);
-  
   const [messages, setMessages] = useState([
     { id: 1, sender: 'Alice', text: 'Hello! How can I help you today?' },
     { id: 2, sender: 'You', text: 'I need help with a data science project.' },
     { id: 3, sender: 'Alice', text: 'Sure! Let’s discuss the details.' },
   ]);
   const [newMessage, setNewMessage] = useState('');
+
+  // Ref to track the chat messages container
+  const messagesEndRef = useRef(null);
+
+  // Function to scroll to the bottom of the chat
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // Scroll to the bottom whenever messages change
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const handleMentorSelect = (mentor) => {
     setSelectedMentor(mentor);
@@ -38,7 +50,6 @@ const Messages = () => {
       {/* Left Part - Mentor List */}
       <div className="left-part-messages">
         <div className="mentor-dropdown">
-          <label htmlFor="mentor-select">My Mentors:</label>
           <select id="mentor-select" className="mentor-select" disabled>
             <option>My Mentors</option>
           </select>
@@ -85,6 +96,8 @@ const Messages = () => {
               <span className="chat-message-text">{message.text}</span>
             </div>
           ))}
+          {/* Dummy div to ensure scrolling to the bottom */}
+          <div ref={messagesEndRef} />
         </div>
         <div className="chat-input-container">
           <input

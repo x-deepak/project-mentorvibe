@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Dashboard from './Dashboard';
 import Messages from './Messages';
-import Profile from './Profile';
+import Account from './Account';
 import BasicTabs from './Tabs';
 import './styles.css';
 
@@ -14,7 +14,7 @@ const DMain = () => {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/message" element={<Messages />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/account" element={<Account />} />
         </Routes>
       </div>
     </div>
