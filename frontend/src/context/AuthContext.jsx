@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
 
         if (response.ok) {
           const data = await response.json();
-          setUser(data.user);
+          setUser({ ...data.user, token }); // Include token in the user object
           setIsMentor(data.isMentor);
           setIsAuthenticated(true);
         } else {
@@ -55,7 +55,6 @@ export const AuthProvider = ({ children }) => {
   const register = async (formData) => {
     try {
       setError(null);
-      console.log("form data at authcontext register::", formData)
       
       const response = await fetch('/api/auth/register', {
         method: 'POST',
@@ -66,7 +65,6 @@ export const AuthProvider = ({ children }) => {
         credentials: 'include'
       });
 
-
       const data = await response.json();
       
       if (!response.ok) {
@@ -74,7 +72,7 @@ export const AuthProvider = ({ children }) => {
       }
       
       localStorage.setItem('token', data.token);
-      setUser(data.user);
+      setUser({ ...data.user, token: data.token }); // Include token in the user object
       setIsMentor(data.isMentor);
       setIsAuthenticated(true);
       setIsRegisterModalOpen(false);
@@ -107,7 +105,7 @@ export const AuthProvider = ({ children }) => {
       }
       
       localStorage.setItem('token', data.token);
-      setUser(data.user);
+      setUser({ ...data.user, token: data.token }); // Include token in the user object
       setIsMentor(data.isMentor);
       setIsAuthenticated(true);
       setIsLoginModalOpen(false);
@@ -128,7 +126,7 @@ export const AuthProvider = ({ children }) => {
   const handleGoogleAuthSuccess = async (token) => {
     try {
       localStorage.setItem('token', token);
-      
+console.log('Token set in local storage:', token);
       const response = await fetch('/api/auth/me', {
         method: 'GET',
         headers: {
@@ -140,7 +138,7 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         const data = await response.json();
-        setUser(data.user);
+        setUser({ ...data.user, token }); // Include token in the user object
         setIsMentor(data.isMentor);
         setIsAuthenticated(true);
       }

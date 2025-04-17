@@ -6,7 +6,7 @@ import { faCamera, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 const Profile = () => {
   // State for form fields
   const [formData, setFormData] = useState({
-    name: 'John Doe',
+    name: 'Hari Kumar',
     gender: '',
     birthDate: '',
     phone: '',

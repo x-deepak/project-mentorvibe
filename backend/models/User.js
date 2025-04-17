@@ -11,6 +11,12 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: 'https://example.com/default-avatar.png', //  default image URL
     },
+    favoriteMentors: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Mentor", // Reference to the Mentor model
+      },
+    ],
     isVerified: {
       type: Boolean,
       default: false,

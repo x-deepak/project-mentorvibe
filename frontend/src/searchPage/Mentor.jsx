@@ -11,6 +11,8 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 import defaultAvatar from '../assets/dashboard/dashboard-user-avatar.jpg';
 import { AuthContext } from '../context/AuthContext';
 
+import dp from '../assets/profile/card-sample.jpg';
+
 const Mentor = () => {
     const { isAuthenticated, user, isMentor, logout, openLoginModal } = useContext(AuthContext);
 
@@ -146,7 +148,7 @@ const Mentor = () => {
                         </div>
                     </div>
                     <div className="mentor-right-card">
-                        <img src={defaultAvatar} alt="User Avatar" className="mentor-profile-avatar" />
+                        <img src={mentor.profilePicture? mentor.profilePicture: dp} alt="User Avatar" className="mentor-profile-avatar" />
                         <h2 className="mentor-profile-name">{mentor.name || "Loading..."}</h2>
                         <div className="mentor-rating-stats">
                             <FontAwesomeIcon icon={faStar} style={{ color: 'gold' }} />

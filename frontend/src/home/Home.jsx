@@ -104,7 +104,6 @@ function Home() {
                         </div>
                         <div className={style["copyright"]}>
                             © 2025 . All Rights Reserved.
-                            <p className={style["credits"]}>Made by Team : <span className={style['team-names']}><span id={style.dk}>Deepak</span>|<span id={style.an}>Amitesh</span>|<span id={style.as}>Asha</span></span></p>
                         </div>
 
                     </div>

@@ -5,6 +5,7 @@ import React from 'react';
 import styles from './Search.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
+import dp from '../assets/profile/card-sample.jpg';
 
 function SearchTitle({ query }) {
     return (
@@ -206,6 +207,7 @@ function Search() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [locationAvailable, setLocationAvailable] = useState(false); // Track if location is available
+    const [page, setPage] = useState(1); // Track the current page
 
     // Controlled filter state based on URL
     const query = searchParams.get("query") || null;
@@ -232,8 +234,8 @@ function Search() {
                         const { latitude, longitude } = position.coords;
                         updateFilters({
                             lat: latitude,
-                            lon: longitude,
-                            usermode: 2, // Set mode to 2 for location-based search
+                            lon: longitude
+ // Set mode to 2 for location-based search
                         });
                         setLocationAvailable(true); // Location is available
                     },
@@ -251,13 +253,14 @@ function Search() {
         setLocation();
     }, []); // Runs only once when the component mounts
 
-    // Fetch mentors based on search parameters
+    // Fetch mentors based on search parameters and page
     useEffect(() => {
         const fetchMentors = async () => {
             setLoading(true);
             setError(null);
 
             const apiParams = new URLSearchParams(searchParams.toString());
+            apiParams.set("page", page); // Add the page parameter
 
             try {
                 const response = await fetch(`/api/search?${apiParams.toString()}`, { mode: "cors", method: "GET" });
@@ -273,7 +276,16 @@ function Search() {
             }
         };
         fetchMentors();
-    }, [searchParams]);
+    }, [searchParams, page]); // Re-fetch mentors when searchParams or page changes
+
+    // Handle pagination
+    const handleNextPage = () => {
+        setPage((prevPage) => prevPage + 1); // Increment the page number
+    };
+
+    const handlePrevPage = () => {
+        setPage((prevPage) => Math.max(prevPage - 1, 1)); // Decrement the page number, but not below 1
+    };
 
     return (
         <div className={styles.searchpage}>
@@ -283,12 +295,28 @@ function Search() {
                     <Filters updateFilters={updateFilters} locationAvailable={locationAvailable} />
                     <CardContainer {...{ mentors, loading, error }} />
                 </div>
+                <div className={styles["pagination-controls"]}>
+                    <button
+                        className={styles["pagination-button"]}
+                        onClick={handlePrevPage}
+                        disabled={page === 1} // Disable "Previous" button on the first page
+                    >
+                        Previous
+                    </button>
+                    <span>Page {page}</span>
+                    <button
+                        className={styles["pagination-button"]}
+                        onClick={handleNextPage}
+                    >
+                        Next
+                    </button>
+                </div>
             </div>
         </div>
     );
 }
 
-import dp from '../assets/profile/card-sample.jpg';
+
 
 function CardContainer({ mentors, loading, error }) {
     if (loading) return <div className={styles['card-container']}><p>Loading...</p></div>;
@@ -306,8 +334,9 @@ function CardContainer({ mentors, loading, error }) {
 }
 
 const ProfileCard = ({ mentor }) => {
+    console.log(mentor);
     const navigate = useNavigate(); // Hook to navigate programmatically
-    const imageUrl = dp;
+    const imageUrl = mentor.profilePicture? mentor.profilePicture: dp;
     const distance = mentor.distance ? (mentor.distance / 1000).toFixed(1) : null;
     const teachingModelocal = (mentor.teachingMode=="Hybrid") ? "Online & Offline" : mentor.teachingMode;
 

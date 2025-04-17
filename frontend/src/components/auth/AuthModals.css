@@ -190,20 +190,22 @@
   }
   
   .checkbox-group {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: 10px;
   }
   
   .checkbox-label {
     display: flex;
     align-items: center;
-    cursor: pointer;
+    font-size: 14px; /* Adjust font size */
+    margin-right: 10px;
   }
   
-  .checkbox-label input {
+  .checkbox-label input[type="checkbox"] {
+    width: 16px; /* Adjust checkbox size */
+    height: 16px; /* Adjust checkbox size */
     margin-right: 5px;
-    width: auto;
   }
   
   .buttons-group {

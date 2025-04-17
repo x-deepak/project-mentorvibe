@@ -169,6 +169,7 @@ const getMentors = asyncHandler(async (req, res) => {
       name: 1,
       classDetails: 1,
       averageRating: 1,
+      profilePicture: 1,
       city: 1,
       fee: 1,
       teachingMode: 1,

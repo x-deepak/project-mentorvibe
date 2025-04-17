@@ -21,9 +21,6 @@ const generateToken = (user) => {
 // Register a user or mentor
 router.post('/register', async (req, res) => {
 
-  console.log("request:::", req);
-  console.log("request body:::", req.body);
-
   const { email, password, name, role, ...additionalFields } = req.body;
   
   try {
@@ -42,9 +39,9 @@ router.post('/register', async (req, res) => {
     // Create user based on role
     if (role === 'mentor') {
       // Validate mentor-specific fields
-      const { expertise, bio, yearsOfExperience, hourlyRate } = additionalFields;
+      const { expertise, bio, fee } = additionalFields;
       
-      if (!expertise || !bio || !yearsOfExperience || !hourlyRate) {
+      if (!expertise || !bio || !fee) {
         return res.status(400).json({ message: 'Please provide all required mentor fields' });
       }
       
@@ -52,10 +49,9 @@ router.post('/register', async (req, res) => {
         email,
         password,
         name,
-        expertise,
+        skills: expertise,
         bio,
-        yearsOfExperience,
-        hourlyRate
+        fee
       });
     } else {
       // Create regular user

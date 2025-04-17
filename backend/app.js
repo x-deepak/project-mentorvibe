@@ -30,10 +30,11 @@ async function run() {
 
 run().catch(console.dir);
 //insert new data - comment this  after use --> [IMPORTANT]
-const  {insertSampleRating, insertData, insertData3 } = require("./models/insertData");
-// insertSampleRating();
 
-// insertData3();
+const  {insertSampleRating, insertData, insertData3,updateFavoriteMentorsManually,insertData5 } = require("./models/insertData");
+// updateFavoriteMentorsManually();
+
+// insertData5();
 
 // Middleware
 
@@ -64,6 +65,13 @@ app.use("/api/search", searchRouter);
 
 
 app.use('/api/auth', authRoutes);
+
+
+const userRouter = require("./routes/userRouter");
+
+// Replace the inline route with userRouter
+app.use('/api/protected/user', require('./middleware/auth'), userRouter);
+
 
 // Protected route example
 app.get('/api/protected', require('./middleware/auth'), (req, res) => {

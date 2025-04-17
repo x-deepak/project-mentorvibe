@@ -406,31 +406,3 @@ ul {
     margin-right: 5px;
 }
 
-
-.team-names> span{
-    padding: 7px;
-    /* border: 1px solid white; */
-}
-
-
-.team-names>#dk:hover{
-    background-color: #53B2EE;
-    font-weight: 1000;
-    border-radius: 5px;
-    
-}
-.team-names>#dk:hover::after{
-    content: "🔥";
-    
-}
-
-.team-names>#as:hover{
-    background-color: #79DCAF;
-    font-weight: 900;
-    border-radius: 5px;
-}
-.team-names>#an:hover{
-    background-color: #F7CA63;
-    font-weight: 900;
-    border-radius: 5px;
-}

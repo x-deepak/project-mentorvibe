@@ -6,15 +6,15 @@ import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 const Messages = () => {
   // Mock data for mentors and conversations
   const mentors = [
-    { id: 1, name: 'Alice', lastMessage: 'Sure! Let’s discuss.', timestamp: '10:30 AM' },
-    { id: 2, name: 'Bob', lastMessage: 'I’ll send the details.', timestamp: '9:15 AM' },
+    { id: 1, name: 'Harry', lastMessage: 'Sure! Let’s discuss.', timestamp: '10:30 AM' },
+    { id: 2, name: 'Prashant', lastMessage: 'I’ll send the details.', timestamp: '9:15 AM' },
   ];
 
   const [selectedMentor, setSelectedMentor] = useState(mentors[0]);
   const [messages, setMessages] = useState([
-    { id: 1, sender: 'Alice', text: 'Hello! How can I help you today?' },
+    { id: 1, sender: 'Harry', text: 'Hello! How can I help you today?' },
     { id: 2, sender: 'You', text: 'I need help with a data science project.' },
-    { id: 3, sender: 'Alice', text: 'Sure! Let’s discuss the details.' },
+    { id: 3, sender: 'Harry', text: 'Sure! Let’s discuss the details.' },
   ]);
   const [newMessage, setNewMessage] = useState('');
 
