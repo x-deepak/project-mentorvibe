@@ -6,6 +6,8 @@ import { AuthContext } from '../context/AuthContext'; // Import AuthContext
 
 import dp from '../assets/profile/card-sample.jpg';
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 
 const Dashboard = () => {
   const { user } = useContext(AuthContext); // Access user data from AuthContext
@@ -23,7 +25,7 @@ const Dashboard = () => {
           return;
         }
 
-        const response = await fetch('/api/protected/user/favorites', {
+        const response = await fetch(`${apiUrl}/api/protected/user/favorites`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

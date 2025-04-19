@@ -1,6 +1,9 @@
 // src/context/AuthContext.js
 import React, { createContext, useState, useEffect } from 'react';
 
+
+const apiUrl = import.meta.env.VITE_API_URL;
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -22,7 +25,7 @@ export const AuthProvider = ({ children }) => {
           return;
         }
 
-        const response = await fetch('/api/auth/me', {
+        const response = await fetch(`${apiUrl}/api/auth/me`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -56,7 +59,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setError(null);
       
-      const response = await fetch('/api/auth/register', {
+      const response = await fetch(`${apiUrl}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -89,7 +92,7 @@ export const AuthProvider = ({ children }) => {
     try {
       setError(null);
       
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(`${apiUrl}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -119,7 +122,7 @@ export const AuthProvider = ({ children }) => {
 
   // Handle Google authentication
   const loginWithGoogle = (role = 'user') => {
-    window.location.href = `/api/auth/google?role=${role}`;
+    window.location.href = `${apiUrl}/api/auth/google?role=${role}`;
   };
 
   // Handle Google auth success (called by GoogleAuthSuccess component)
@@ -127,7 +130,7 @@ export const AuthProvider = ({ children }) => {
     try {
       localStorage.setItem('token', token);
 console.log('Token set in local storage:', token);
-      const response = await fetch('/api/auth/me', {
+      const response = await fetch(`${apiUrl}/api/auth/me`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -150,7 +153,7 @@ console.log('Token set in local storage:', token);
   // Logout user
   const logout = async () => {
     try {
-      await fetch('/api/auth/logout', {
+      await fetch(`${apiUrl}/api/auth/logout`, {
         method: 'GET',
         credentials: 'include'
       });

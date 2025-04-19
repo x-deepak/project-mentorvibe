@@ -13,6 +13,10 @@ import { AuthContext } from '../context/AuthContext';
 
 import dp from '../assets/profile/card-sample.jpg';
 
+
+const apiUrl = import.meta.env.VITE_API_URL;
+
+
 const Mentor = () => {
     const { isAuthenticated, user, isMentor, logout, openLoginModal } = useContext(AuthContext);
 
@@ -36,7 +40,7 @@ const Mentor = () => {
             const apiParams = new URLSearchParams(searchParams.toString());
 
             try {
-                const response = await fetch(`/api/search/mentor?${apiParams.toString()}`, { mode: "cors", method: "GET" });
+                const response = await fetch(`${apiUrl}/api/search/mentor?${apiParams.toString()}`, { mode: "cors", method: "GET" });
 
                 if (!response.ok) throw new Error("Failed to fetch mentor profile");
                 const data = await response.json();
@@ -58,7 +62,7 @@ const Mentor = () => {
             setReviewsError(null);
 
             try {
-                const response = await fetch(`/api/search/mentor/review?id=${mentor._id}`, { mode: "cors", method: "GET" });
+                const response = await fetch(`${apiUrl}/api/search/mentor/review?id=${mentor._id}`, { mode: "cors", method: "GET" });
 
                 if (!response.ok) throw new Error("Failed to fetch reviews");
                 const data = await response.json();

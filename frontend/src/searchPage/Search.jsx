@@ -7,6 +7,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import dp from '../assets/profile/card-sample.jpg';
 
+
+const apiUrl = import.meta.env.VITE_API_URL;
+
+
 function SearchTitle({ query }) {
     return (
         <>
@@ -263,7 +267,7 @@ function Search() {
             apiParams.set("page", page); // Add the page parameter
 
             try {
-                const response = await fetch(`/api/search?${apiParams.toString()}`, { mode: "cors", method: "GET" });
+                const response = await fetch(`${apiUrl}/api/search?${apiParams.toString()}`, { mode: "cors", method: "GET" });
 
                 if (!response.ok) throw new Error("Failed to fetch mentors");
                 const data = await response.json();
