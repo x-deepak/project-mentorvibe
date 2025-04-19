@@ -14,6 +14,27 @@ const authRoutes = require('./routes/auth');
 
 const app = express();
 
+
+//cors setup
+const allowedOrigins = ['https://mentorvibe.site', 'http://localhost:3000', 'http://localhost:5173'];
+
+// CORS configuration to allow multiple domains
+app.use(cors({
+  origin: function (origin, callback) {
+    // Check if the origin is in the allowed list
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);  // Allow the request
+    } else {
+      callback(new Error('Not allowed by CORS'));  // Reject the request
+    }
+  },
+  credentials: true,  // If you need to allow cookies or sessions
+}));
+
+
+
+
+
 // Database Connection
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
@@ -45,7 +66,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+// app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(passport.initialize());
 
 
