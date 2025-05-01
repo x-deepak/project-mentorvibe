@@ -6,12 +6,7 @@ import LoginModal from './components/auth/LoginModal';
 import RegisterModal from './components/auth/RegisterModal';
 import GoogleAuthSuccess from './components/auth/GoogleAuthSuccess';
 
-import Header from './home/Header.jsx'
-// import Dashboard from './components/dashboard/Dashboard';
-// import MentorDashboard from './components/dashboard/MentorDashboard';
-// import Home from './components/pages/Home';
-// import About from './components/pages/About';
-// import Mentors from './components/pages/Mentors';
+import Header from './home/Header.jsx';
 import PrivateRoute from './components/routing/PrivateRoute';
 // import './App.css';
 import './index.css'
@@ -22,7 +17,8 @@ import Search from "./searchPage/Search";
 import Mentor from "./searchPage/Mentor";
 import ErrorPage from "./ErrorPage";
 
-import DMain from './dashboard/Main.jsx';
+import DMain from './learnerDashboard/Main.jsx';
+import MentorDashboard from './mentorDashboard/Main.jsx';
 
 const App = () => {
   return (
@@ -41,27 +37,18 @@ const App = () => {
 
               <Route path="/auth-success" element={<GoogleAuthSuccess />} />
 
-
-
-
-              
-              
-              
               {/* Protected Routes */}
-
               <Route path="/learner/dashboard/*" element={
-                <PrivateRoute>
+                <PrivateRoute isLearnerRoute={true}>
                   <DMain />
                 </PrivateRoute>
               } />
-              
-              {/* <Route path="/mentor/dashboard/*" element={<DMain />} /> */}
-              {/* uncomment from here -> */}
-              {/* <Route path="/mentor/dashboard" element={
+
+              <Route path="/mentor/dashboard/*" element={
                 <PrivateRoute isMentorRoute={true}>
                   <MentorDashboard />
                 </PrivateRoute>
-              } /> */}
+              } />
               
               {/* Catch all route */}
               <Route path="*" element={<Navigate to="/" />} />

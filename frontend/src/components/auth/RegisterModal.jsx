@@ -81,6 +81,7 @@ const RegisterModal = () => {
   };
   
   const handleGoogleRegister = () => {
+    console.log("Google Register clicked for role:",formData.role);;
     loginWithGoogle(formData.role);
   };
   

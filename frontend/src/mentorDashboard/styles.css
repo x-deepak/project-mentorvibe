@@ -1,0 +1,530 @@
+.dashpage {
+  display: flex;
+  justify-content: start;
+  background-image: none;
+  background-position: right top;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-color: var(--color-base-bg);
+  color: var(--color-base-text);
+  flex-direction: column;
+  align-items: center;
+  min-height: calc(100vh - 60px); 
+  padding-bottom: 30px;
+}
+
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 1060px;
+}
+
+.dashboard{
+  display: grid;
+  grid-template-columns: 4fr 5fr ;
+  gap: 20px;
+  padding: 20px 0 0;
+  width: 100%;
+}
+
+
+
+.user-profile {
+  padding: 50px 40px 40px;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.preview-avatar-container{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+img.preview-avatar {
+  width: 160px;
+  height: 160px;
+  border-radius: 48px;
+
+}
+
+.user-name{
+  margin: 20px 0 0 0;
+  font-size: 30px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.verify-status{
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  border-top: 2px solid rgb(247, 247, 247);
+}
+
+
+.verify-status-text{
+  text-align: right;
+      font-size: 16px;
+      font-weight: 700;
+
+}
+
+.class-request-container{
+  background-color: white;
+  border-radius: 5px;
+}
+
+
+
+.class-request-title{
+  padding: 40px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.class-request-item{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px;
+  border-top: 2px solid rgb(247, 247, 247);
+}
+
+.mentor-info{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+img.request-mentor-avatar{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.mentor-details{
+  font-size: 14px;
+}
+
+.request-mentor-name{
+  font-weight: 700;
+}
+.request-mentor-profession{
+  font-weight: 400;
+  color: #999;
+}
+
+.mentor-status{
+  width: 100px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fa6484;
+}
+
+.favorites-container {
+  background-color: white;
+  margin-top: 20px;
+}
+
+.favorites-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  padding: 30px;
+  font-size: 18px;
+}
+
+.favorites-list {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
+.edit-icon,
+.delete-icon,
+.save-icon,
+.cancel-icon {
+  font-size: 20px;
+}
+
+.favorites-list > .class-request-item{
+  padding: 20px;
+}
+
+
+
+
+/* Messages Layout */
+.messages {
+  display: grid;
+  grid-template-columns: 3fr 7fr;
+  gap: 20px;
+  height: calc(100vh - 150px); 
+  padding: 20px 0 0;
+}
+
+/* Left Part - Mentor List */
+.left-part-messages {
+  background-color: white;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.mentor-dropdown {
+  margin-bottom: 20px;
+}
+
+.mentor-select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.mentor-list {
+  margin-top: 20px;
+}
+
+.mentor-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.mentor-item:hover {
+  background-color: #f1f1f1;
+}
+
+.mentor-item-selected {
+  background-color: #e0f7fa;
+}
+
+.mentor-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.mentor-info {
+  flex: 1;
+}
+
+.mentor-name {
+  font-weight: bold;
+}
+
+.mentor-last-message {
+  font-size: 14px;
+  color: #999;
+}
+
+.mentor-timestamp {
+  font-size: 12px;
+  color: #999;
+}
+
+/* Chat Box */
+.chat-box {
+  background-color: white;
+  border-radius: 5px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: inherit;
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.chat-mentor-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.chat-mentor-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-mentor-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.chat-mentor-profession {
+  font-size: 14px;
+  color: #999;
+}
+
+.chat-messages {
+  flex-grow: none;
+  overflow-y: scroll;
+  height: 100%;
+  /* margin-bottom: 20px;  */
+  display: flex;
+  width: inherit;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Chat Message Bubbles */
+.chat-message {
+  max-width: 70%;
+  padding: 10px 15px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+
+  word-wrap: break-word; /* Break long words */
+  word-break: break-word; /* Ensure long words break */
+  overflow-wrap: break-word; /* Additional support for breaking words */
+
+  white-space: pre-wrap; 
+  
+}
+
+/* Sender's Bubble (Right-Aligned) */
+.chat-message-sender {
+  background-color: #e0f7fa;
+  align-self: flex-end;
+  border-top-right-radius: 0;
+  text-align: left;
+
+}
+
+/* Receiver's Bubble (Left-Aligned) */
+.chat-message-receiver {
+  background-color: #f1f1f1;
+  align-self: flex-start;
+  border-top-left-radius: 0;
+  text-align: left;
+}
+
+.chat-input-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+.chat-send-icon {
+  font-size: 20px;
+  color: #007bff;
+  cursor: pointer;
+}
+
+
+.my-account{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+  padding: 20px 0 0;
+  width: 100%;
+}
+
+.general-info{
+  background-color: white;
+  padding: 30px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+}
+
+.gen-info-title{
+  text-align: center;
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  height: 60px;
+}
+
+.save-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 16px;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  height: 54px;
+}
+
+.save-button:hover {
+  background-color: #0056b3;
+
+}
+
+
+
+
+
+
+.change-profile-pic{
+  background-color: white;
+  padding: 30px 40px 56px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.change-profile-pic > h1 {
+  margin-bottom: 32px;
+}
+
+
+.img-wrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.change-profile-pic  img{
+  width: 200px;
+  height: 200px;
+  border-radius: 48px;
+}
+
+
+.camera-wrapper{
+  background-color: yellowgreen;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 18px;
+  position:absolute;
+  bottom: -5px;
+  right: -10px;
+  
+}
+
+.camera-wrapper:hover{
+  background-color: black;
+}
+
+
+
+
+
+.modify-password{
+  background-color: white;
+  padding: 30px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 15px;
+}
+
+.delete-account {
+  margin-top: 20px;
+  background-color: white;
+  padding: 30px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+
+.delete-account > h1{
+ margin-bottom: 20px;
+
+}
+
+
+.delete-warning {
+  font-size: 15px;
+  color: #000000;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+.delete-checkbox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.delete-checkbox.selected {
+  background-color: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.delete-icon {
+  color: white;
+  font-size: 18px;
+}
+
+.delete-button {
+  background-color: #ccc;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: not-allowed;
+}
+
+.delete-button.active {
+  background-color: #dc3545;
+  cursor: pointer;
+}
+
+.delete-button.active:hover {
+  background-color: #c82333;
+}
+

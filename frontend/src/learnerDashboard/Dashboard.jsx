@@ -152,7 +152,7 @@ const Dashboard = () => {
 
       <div className="right-part">
         <div className="class-request-container">
-          <div className="class-request-title">Class Requests</div>
+          <div className="class-request-title">Class Requests Sent</div>
           <div className="class-request-list">
             <div className="class-request-item">
               <div className="mentor-info">

@@ -21,7 +21,7 @@ function SearchTitle({ query }) {
     );
 }
 
-function Filters({ updateFilters, locationAvailable }) {
+function Filters({ updateFilters, locationAvailable, setPage }) {
     const [rating, setRating] = useState(null);
     const [fee, setFee] = useState(5000);
     const [mode, setMode] = useState("online");
@@ -31,12 +31,14 @@ function Filters({ updateFilters, locationAvailable }) {
         const value = e.target.value;
         setRating(value);
         updateFilters({ rating: value });
+        setPage(1); // Reset to the first page when filters change
     };
 
     const handleFeeChange = (e) => {
         const value = e.target.value;
         setFee(value);
         updateFilters({ fee: value });
+        setPage(1);
     };
 
     const handleModeChange = (e) => {
@@ -44,15 +46,18 @@ function Filters({ updateFilters, locationAvailable }) {
         const value = modeMap[e.target.value];
         setMode(e.target.value);
         updateFilters({ usermode: value });
+        setPage(1);
     };
 
     const handleDistanceChange = (e) => {
         const value = e.target.value;
         setDistance(value); // Update local state immediately
+        
     };
 
     const handleDistanceUpdate = () => {
         updateFilters({ distance: distance * 1000 }); // Update query only when slider stops
+        setPage(1);
     };
 
     return (
@@ -127,7 +132,7 @@ function Filters({ updateFilters, locationAvailable }) {
             <div className={styles["filter-group"]}>
                 <div className={styles["title-group"]}>
                     <span>Fee</span>
-                    <span>Min: ₹{fee}</span>
+                    <span>Max: ₹{fee}</span>
                 </div>
 
                 <input
@@ -212,6 +217,7 @@ function Search() {
     const [error, setError] = useState(null);
     const [locationAvailable, setLocationAvailable] = useState(false); // Track if location is available
     const [page, setPage] = useState(1); // Track the current page
+    const [hasMoreMentors, setHasMoreMentors] = useState(true); // Track if more mentors are available
 
     // Controlled filter state based on URL
     const query = searchParams.get("query") || null;
@@ -238,8 +244,7 @@ function Search() {
                         const { latitude, longitude } = position.coords;
                         updateFilters({
                             lat: latitude,
-                            lon: longitude
- // Set mode to 2 for location-based search
+                            lon: longitude,
                         });
                         setLocationAvailable(true); // Location is available
                     },
@@ -271,8 +276,10 @@ function Search() {
 
                 if (!response.ok) throw new Error("Failed to fetch mentors");
                 const data = await response.json();
-                console.log(data);
+                console.log("mentors returned: ", data.length);
+
                 setMentors(data);
+                setHasMoreMentors(data.length > 0); // Check if more mentors are available
             } catch (err) {
                 setError(err.message || "Something went wrong");
             } finally {
@@ -284,7 +291,9 @@ function Search() {
 
     // Handle pagination
     const handleNextPage = () => {
-        setPage((prevPage) => prevPage + 1); // Increment the page number
+        if (hasMoreMentors) {
+            setPage((prevPage) => prevPage + 1); // Increment the page number
+        }
     };
 
     const handlePrevPage = () => {
@@ -296,7 +305,7 @@ function Search() {
             <div className={styles["main-content-wrapper"]}>
                 <SearchTitle query={query} />
                 <div className={styles["main-content"]}>
-                    <Filters updateFilters={updateFilters} locationAvailable={locationAvailable} />
+                    <Filters updateFilters={updateFilters} locationAvailable={locationAvailable} setPage={setPage} />
                     <CardContainer {...{ mentors, loading, error }} />
                 </div>
                 <div className={styles["pagination-controls"]}>
@@ -311,6 +320,7 @@ function Search() {
                     <button
                         className={styles["pagination-button"]}
                         onClick={handleNextPage}
+                        disabled={!hasMoreMentors || loading} // Disable "Next" button if no more mentors or loading
                     >
                         Next
                     </button>
