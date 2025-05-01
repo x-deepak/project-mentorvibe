@@ -15,14 +15,14 @@ const MentorSchema = new mongoose.Schema(
         profileTitle: { type: String, default: "Courses taken- All boards including US,AUSTRALIAN,SINGAPORE (Maths & Physics), IIT Foundation courses."}, // Example: "Courses taken- All boards including US,AUSTRALIAN,SINGAPORE (Maths & Physics), IIT Foundation courses."
         phone: { type: String }, // Example: "+1234567890"
         profilePicture: { type: String }, // URL to the profile picture
-        skills: [{ type: String, required: true }], // Example: ["JavaScript", "Python"]
+        skills: [{ type: String }], // Example: ["JavaScript", "Python"]
         teachingMode: {
             type: String,
             enum: ["Online", "Offline", "Hybrid"], // Restricts values to these options
-            required: true
+            default: "Online", // Default value
         },
         bio: { type: String },
-        fee: { type: Number, required: true },
+        fee: { type: Number, default: 500 },
         classDetails: { type: String },
         ratings: [{ user: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, rating: Number, review: String }],
         averageRating: { type: Number, default: 0 },
@@ -48,9 +48,18 @@ MentorSchema.pre('save', async function(next) {
       next(error);
     }
   });
+
+// Location validation middleware
+MentorSchema.pre('save', function(next) {
+  // If coordinates are missing, remove the entire location field
+  if (this.location && (!this.location.coordinates || this.location.coordinates.length !== 2)) {
+    this.location = undefined;
+  }
+  next();
+});
   
-  // Password verification method
-  MentorSchema.methods.comparePassword = async function(candidatePassword) {
+// Password verification method
+MentorSchema.methods.comparePassword = async function(candidatePassword) {
     if (!this.password) return false;
     return await bcrypt.compare(candidatePassword, this.password);
   };

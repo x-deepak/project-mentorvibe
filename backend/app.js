@@ -1,4 +1,3 @@
-
 const path = require("node:path");
 require('dotenv').config()
 
@@ -9,6 +8,7 @@ require('./config/passport');
 
 const cors = require("cors");
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 const authRoutes = require('./routes/auth');
 
 
@@ -16,21 +16,13 @@ const app = express();
 
 
 //cors setup
-const allowedOrigins = ['https://mentorvibe.site', 'http://localhost:3000', 'http://localhost:5173'];
 
-// CORS configuration to allow multiple domains
+//cors setup
+
 app.use(cors({
-  origin: function (origin, callback) {
-    // Check if the origin is in the allowed list
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);  // Allow the request
-    } else {
-      callback(new Error('Not allowed by CORS'));  // Reject the request
-    }
-  },
-  credentials: true,  // If you need to allow cookies or sessions
+  origin: process.env.CORS_ORIGIN_URL, // ✅ must match exactly
+  credentials: true, // ✅ allow cookies
 }));
-
 
 
 
@@ -52,7 +44,7 @@ async function run() {
 run().catch(console.dir);
 //insert new data - comment this  after use --> [IMPORTANT]
 
-const  {insertSampleRating, insertData, insertData3,updateFavoriteMentorsManually,insertData5 } = require("./models/insertData");
+// const  {insertSampleRating, insertData, insertData3,updateFavoriteMentorsManually,insertData5 } = require("./models/insertData");
 // updateFavoriteMentorsManually();
 
 // insertData5();
@@ -69,6 +61,12 @@ app.use(cookieParser());
 // app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(passport.initialize());
 
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'your-secret-key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: process.env.NODE_ENV === 'production' }
+}));
 
 const assetsPath = path.join(__dirname, "public");
 app.use(express.static(assetsPath));
@@ -109,6 +107,8 @@ app.use((err, req, res, next) => {
 
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, 'localhost', () => {
+
+// removed the second argument "localhost", so it listens on all interfaces (both IPv4 and IPv6)
+app.listen(PORT, () => {
   console.log(`My first Express app - listening on localhost:${PORT}!`);
 });

@@ -38,20 +38,11 @@ router.post('/register', async (req, res) => {
     
     // Create user based on role
     if (role === 'mentor') {
-      // Validate mentor-specific fields
-      const { expertise, bio, fee } = additionalFields;
-      
-      if (!expertise || !bio || !fee) {
-        return res.status(400).json({ message: 'Please provide all required mentor fields' });
-      }
-      
+      // Validate mentor-specific fields      
       user = new Mentor({
         email,
         password,
         name,
-        skills: expertise,
-        bio,
-        fee
       });
     } else {
       // Create regular user
@@ -143,6 +134,9 @@ router.get('/google', (req, res, next) => {
 // Google OAuth callback
 router.get('/google/callback', passport.authenticate('google', { session: false }), async (req, res) => {
   try {
+    console.log('Google callback received user:', req.user);
+    console.log('Desired role from session:', req.session?.role);
+
     // Check if user already exists and has the right role
     const user = req.user;
     const desiredRole = req.session?.role || 'user';
@@ -158,11 +152,6 @@ router.get('/google/callback', passport.authenticate('google', { session: false 
           email: user.email,
           name: user.name,
           googleId: user.googleId,
-          // Default values for required fields
-          expertise: ['Other'],
-          bio: 'New mentor profile',
-          yearsOfExperience: 0,
-          hourlyRate: 0
         });
         
         await newMentor.save();
