@@ -118,112 +118,38 @@ router.post('/login', (req, res, next) => {
 });
 
 // Google OAuth routes
-router.get('/google', (req, res, next) => {
-  // Get the role from query parameter
-  const role = req.query.role || 'user';
-  
-  // Store role in session for use after Google auth
-  req.session = req.session || {};
-  req.session.role = role;
-  
-  passport.authenticate('google', {
-    scope: ['profile', 'email']
-  })(req, res, next);
-});
+router.get('/google', passport.authenticate('google', {
+  scope: ['profile', 'email']
+}));
 
 // Google OAuth callback
-router.get('/google/callback', passport.authenticate('google', { session: false }), async (req, res) => {
-  try {
-    console.log('Google callback received user:', req.user);
-    console.log('Desired role from session:', req.session?.role);
+router.get(
+  '/google/callback',
+  passport.authenticate('google', { session: false }),
+  async (req, res) => {
+    try {
+      const user = req.user;
 
-    // Check if user already exists and has the right role
-    const user = req.user;
-    const desiredRole = req.session?.role || 'user';
-    
-    // If user was found in the wrong collection based on desired role
-    if ((desiredRole === 'mentor' && !user.isMentor) || 
-        (desiredRole === 'user' && user.isMentor)) {
-      
-      // User wants to be mentor but is in user collection
-      if (desiredRole === 'mentor' && !user.isMentor) {
-        // Create new mentor from user data
-        const newMentor = new Mentor({
-          email: user.email,
-          name: user.name,
-          googleId: user.googleId,
-        });
-        
-        await newMentor.save();
-        
-        // Delete from User collection if it exists only by Google login
-        if (!user.password) {
-          await User.findByIdAndDelete(user._id);
-        }
-        
-        // Generate token for new mentor
-        const token = generateToken(newMentor);
-        
-        // Send token in cookie
-        res.cookie('token', token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          maxAge: 24 * 60 * 60 * 1000
-        });
-        
-        // Redirect with token
-        return res.redirect(`${process.env.FRONTEND_URL}/auth-success?token=${token}&role=mentor`);
-      }
-      
-      // User wants to be regular user but is in mentor collection
-      if (desiredRole === 'user' && user.isMentor) {
-        // Create new user from mentor data
-        const newUser = new User({
-          email: user.email,
-          name: user.name,
-          googleId: user.googleId
-        });
-        
-        await newUser.save();
-        
-        // Delete from Mentor collection if it exists only by Google login
-        if (!user.password) {
-          await Mentor.findByIdAndDelete(user._id);
-        }
-        
-        // Generate token for new user
-        const token = generateToken(newUser);
-        
-        // Send token in cookie
-        res.cookie('token', token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          maxAge: 24 * 60 * 60 * 1000
-        });
-        
-        // Redirect with token
-        return res.redirect(`${process.env.FRONTEND_URL}/auth-success?token=${token}&role=user`);
-      }
+      // Generate token for the authenticated user
+      const token = generateToken(user);
+
+      // Send token in cookie
+      res.cookie('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000
+      });
+
+      // Redirect to frontend with token and role
+      res.redirect(
+        `${process.env.FRONTEND_URL}/auth-success?token=${token}&role=${user.isMentor ? 'mentor' : 'user'}`
+      );
+    } catch (err) {
+      console.error('Google callback error:', err);
+      res.redirect(`${process.env.FRONTEND_URL}/login?error=google_auth_failed`);
     }
-    
-    // Generate token for existing user
-    const token = generateToken(user);
-    
-    // Send token in cookie
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 24 * 60 * 60 * 1000
-    });
-    
-    // Redirect to frontend with token and role
-    res.redirect(`${process.env.FRONTEND_URL}/auth-success?token=${token}&role=${user.isMentor ? 'mentor' : 'user'}`);
-    
-  } catch (err) {
-    console.error('Google callback error:', err);
-    res.redirect(`${process.env.FRONTEND_URL}/login?error=google_auth_failed`);
   }
-});
+);
 
 // Get current user profile
 router.get('/me', auth, async (req, res) => {
