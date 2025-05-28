@@ -223,6 +223,13 @@ img.request-mentor-avatar{
   flex: 1;
 }
 
+.mentor-meta {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px; /* space between last message and timestamp */
+}
+
 .mentor-name {
   font-weight: bold;
 }

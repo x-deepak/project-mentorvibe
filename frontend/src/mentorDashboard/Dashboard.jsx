@@ -14,6 +14,9 @@ const Dashboard = () => {
 
   const [favorites, setFavorites] = useState([]); // State for favorites
   const [isEditing, setIsEditing] = useState(false);
+  const [classRequests, setClassRequests] = useState([]); // <-- Add this state
+
+  console.log('user in dashboard', user);
 
   // Fetch favorites when the component mounts
   useEffect(() => {
@@ -50,6 +53,28 @@ const Dashboard = () => {
     fetchFavorites();
   }, [user]);
 
+  // Fetch class requests (conversations) on load
+  useEffect(() => {
+    const fetchClassRequests = async () => {
+      try {
+        if (!user?.token) return;
+        const response = await fetch(`${apiUrl}/api/protected/user/mentor/conversations`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
+        if (!response.ok) throw new Error('Failed to fetch class requests');
+        const data = await response.json();
+        setClassRequests(data.conversations || []);
+      } catch (error) {
+        console.error('Error fetching class requests:', error);
+      }
+    };
+    fetchClassRequests();
+  }, [user]);
+
   const handleDelete = (id) => {
     setFavorites(favorites.filter((mentor) => mentor.id !== id));
   };
@@ -68,13 +93,66 @@ const Dashboard = () => {
     // Revert changes logic here (if needed)
   };
 
+  // Accept/Reject handlers
+  const handleAccept = async (conversationId) => {
+    const confirmed = window.confirm('Are you sure you want to accept this class request?');
+    if (!confirmed) return;
+    try {
+      const res = await fetch(`${apiUrl}/api/protected/user/mentor/conversations/accept`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({ conversationId }),
+      });
+      if (res.ok) {
+        setClassRequests((prev) =>
+          prev.map((req) =>
+            req.conversationId === conversationId
+              ? { ...req, isPending: false, isActive: true }
+              : req
+          )
+        );
+      }
+    } catch (err) {
+      console.error('Failed to accept request:', err);
+    }
+  };
+
+  const handleReject = async (conversationId) => {
+    const confirmed = window.confirm('Are you sure you want to reject this class request?');
+    if (!confirmed) return;
+    try {
+      const res = await fetch(`${apiUrl}/api/protected/user/mentor/conversations/reject`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({ conversationId }),
+      });
+      if (res.ok) {
+        setClassRequests((prev) =>
+          prev.map((req) =>
+            req.conversationId === conversationId
+              ? { ...req, isPending: false, isActive: false }
+              : req
+          )
+        );
+      }
+    } catch (err) {
+      console.error('Failed to reject request:', err);
+    }
+  };
+
   return (
     <div className="dashboard">
       <div className="left-part">
         <div className="user-profile">
           <div className="preview-avatar-container">
             <img
-              src={ dp || defaultAvatar} // Use user's avatar if available, fallback to default
+              src={ user?.profilePicture || defaultAvatar} // Use user's avatar if available, fallback to default
               alt="User Avatar"
               className="preview-avatar"
             />
@@ -154,34 +232,44 @@ const Dashboard = () => {
         <div className="class-request-container">
           <div className="class-request-title">Class Requests Received</div>
           <div className="class-request-list">
-            <div className="class-request-item">
-              <div className="mentor-info">
-                <img
-                  src={defaultAvatar}
-                  alt="User Avatar"
-                  className="request-mentor-avatar"
-                />
-                <span className="mentor-details">
-                  <div className="request-mentor-name">Harry</div>
-                  <div className="request-mentor-profession">Software Engineer</div>
-                </span>
-              </div>
-              <div className="mentor-status">Rejected by you{/*Awaiting approval */}</div>
-            </div>
-            <div className="class-request-item">
-              <div className="mentor-info">
-                <img
-                  src={defaultAvatar}
-                  alt="User Avatar"
-                  className="request-mentor-avatar"
-                />
-                <span className="mentor-details">
-                  <div className="request-mentor-name">Prashant</div>
-                  <div className="request-mentor-profession">Data Scientist</div>
-                </span>
-              </div>
-              <div className="mentor-status">Approved by you{/*Awaiting approval */}</div>
-            </div>
+            {classRequests.length === 0 ? (
+              <div>No class requests found.</div>
+            ) : (
+              classRequests.map((req) => (
+                <div className="class-request-item" key={req.conversationId}>
+                  <div className="mentor-info">
+                    <img
+                      src={req.user?.profileImage || defaultAvatar}
+                      alt="User Avatar"
+                      className="request-mentor-avatar"
+                    />
+                    <span className="mentor-details">
+                      <div className="request-mentor-name">{req.user?.name || "Unknown"}</div>
+                    </span>
+                  </div>
+                  <div className="mentor-status" style={{minWidth: '180px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end'}}>
+                    {req.isPending ? (
+                      <div style={{display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap'}}>
+                        <button 
+                          onClick={() => handleAccept(req.conversationId)} 
+                          style={{backgroundColor: '#4CAF50', color: 'white', border: 'none', padding: '6px 16px', borderRadius: '4px', cursor: 'pointer', whiteSpace: 'nowrap'}}>
+                          Accept
+                        </button>
+                        <button 
+                          onClick={() => handleReject(req.conversationId)} 
+                          style={{backgroundColor: '#fa6484', color: 'white', border: 'none', padding: '6px 16px', borderRadius: '4px', cursor: 'pointer', whiteSpace: 'nowrap'}}>
+                          Reject
+                        </button>
+                      </div>
+                    ) : req.isActive ? (
+                      "Approved by you"
+                    ) : (
+                      "Rejected by you"
+                    )}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

@@ -158,7 +158,7 @@ const Header = () => {
                                         aria-expanded={open ? 'true' : undefined}
                                     >
                                         <Avatar
-                                            src={dp}
+                                            src={user?.profilePicture || dp}
                                             {...stringAvatar('Kent Dodds')}
                                             onClick={toggleDropdown}
                                             sx={{ width: 40, height: 40 }}

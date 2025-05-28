@@ -14,6 +14,7 @@ const Dashboard = () => {
 
   const [favorites, setFavorites] = useState([]); // State for favorites
   const [isEditing, setIsEditing] = useState(false);
+  const [conversations, setConversations] = useState([]); // <-- Add this state
 
   // Fetch favorites when the component mounts
   useEffect(() => {
@@ -50,8 +51,44 @@ const Dashboard = () => {
     fetchFavorites();
   }, [user]);
 
-  const handleDelete = (id) => {
-    setFavorites(favorites.filter((mentor) => mentor.id !== id));
+  // Fetch conversations on load
+  useEffect(() => {
+    const fetchConversations = async () => {
+      try {
+        if (!user?.token) return;
+        const response = await fetch(`${apiUrl}/api/protected/user/conversations`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${user.token}`,
+          },
+        });
+        if (!response.ok) throw new Error('Failed to fetch conversations');
+        const data = await response.json();
+        setConversations(data.conversations || []);
+      } catch (error) {
+        console.error('Error fetching conversations:', error);
+      }
+    };
+    fetchConversations();
+  }, [user]);
+
+  const handleDelete = async (id) => {
+    try {
+      if (!user?.token) return;
+      const response = await fetch(`${apiUrl}/api/protected/user/favorites/delete`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({ mentorId: id }),
+      });
+      if (!response.ok) throw new Error('Failed to delete favorite mentor');
+      setFavorites(favorites.filter((mentor) => mentor.id !== id));
+    } catch (error) {
+      console.error('Error deleting favorite mentor:', error);
+    }
   };
 
   const handleEditToggle = () => {
@@ -154,34 +191,28 @@ const Dashboard = () => {
         <div className="class-request-container">
           <div className="class-request-title">Class Requests Sent</div>
           <div className="class-request-list">
-            <div className="class-request-item">
-              <div className="mentor-info">
-                <img
-                  src={defaultAvatar}
-                  alt="User Avatar"
-                  className="request-mentor-avatar"
-                />
-                <span className="mentor-details">
-                  <div className="request-mentor-name">Harry</div>
-                  <div className="request-mentor-profession">Software Engineer</div>
-                </span>
-              </div>
-              <div className="mentor-status">Approved{/*Awaiting approval */}</div>
-            </div>
-            <div className="class-request-item">
-              <div className="mentor-info">
-                <img
-                  src={defaultAvatar}
-                  alt="User Avatar"
-                  className="request-mentor-avatar"
-                />
-                <span className="mentor-details">
-                  <div className="request-mentor-name">Prashant</div>
-                  <div className="request-mentor-profession">Data Scientist</div>
-                </span>
-              </div>
-              <div className="mentor-status">Approved{/*Awaiting approval */}</div>
-            </div>
+            {conversations.length === 0 ? (
+              <div>No class requests found.</div>
+            ) : (
+              conversations.map((conv) => (
+                <div className="class-request-item" key={conv.conversationId}>
+                  <div className="mentor-info">
+                    <img
+                      src={conv.mentor?.profilePicture || defaultAvatar}
+                      alt="Mentor Avatar"
+                      className="request-mentor-avatar"
+                    />
+                    <span className="mentor-details">
+                      <div className="request-mentor-name">{conv.mentor?.name || "Unknown"}</div>
+                      <div className="request-mentor-profession">{conv.mentor?.professionalTitle || "N/A"}</div>
+                    </span>
+                  </div>
+                  <div className="mentor-status">
+                    {conv.isActive ? "Approved" : "Pending"}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       </div>

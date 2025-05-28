@@ -6,7 +6,8 @@ import './Mentor.css';
 import styles from './Search.module.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faHeart as faHeartSolid } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faHeartRegular } from '@fortawesome/free-regular-svg-icons';
 
 import defaultAvatar from '../assets/dashboard/dashboard-user-avatar.jpg';
 import { AuthContext } from '../context/AuthContext';
@@ -27,6 +28,8 @@ const Mentor = () => {
     const [reviewsLoading, setReviewsLoading] = useState(true); // Loading state for reviews
     const [error, setError] = useState(null);
     const [reviewsError, setReviewsError] = useState(null); // Error state for reviews
+    const [conversationStatus, setConversationStatus] = useState(null); // 'active', 'pending', or null
+    const [isFavorite, setIsFavorite] = useState(false);
 
     // Controlled filter state based on URL
     const query = searchParams.get("query") || null;
@@ -44,8 +47,39 @@ const Mentor = () => {
 
                 if (!response.ok) throw new Error("Failed to fetch mentor profile");
                 const data = await response.json();
-                console.log("Mentor data:", data);
                 setMentor(data);
+
+                // Fetch conversation status if user is logged in
+                if (isAuthenticated && data._id && user?._id) {
+                    try {
+                        const convRes = await fetch(
+                            `${apiUrl}/api/protected/user/conversations/status?mentorId=${data._id}`,
+                            {
+                                headers: {
+                                    'Authorization': `Bearer ${user.token}`,
+                                    'Content-Type': 'application/json'
+                            },
+                            credentials: 'include'
+                        }
+                        );
+                        if (convRes.ok) {
+                            const convData = await convRes.json();
+                            if (!convData.exists) {
+                                setConversationStatus(null); // No conversation, keep as "Contact"
+                            } else if (convData.isActive) {
+                                setConversationStatus('active'); // Conversation active
+                            } else {
+                                setConversationStatus('pending'); // Conversation exists but not active
+                            }
+                        } else {
+                            setConversationStatus(null);
+                        }
+                    } catch {
+                        setConversationStatus(null);
+                    }
+                } else {
+                    setConversationStatus(null);
+                }
             } catch (err) {
                 setError(err.message || "Something went wrong");
             } finally {
@@ -53,7 +87,8 @@ const Mentor = () => {
             }
         };
         fetchMentorProfile();
-    }, [searchParams]);
+        // eslint-disable-next-line
+    }, [searchParams, isAuthenticated, user]);
 
     // Fetch reviews
     useEffect(() => {
@@ -166,7 +201,83 @@ const Mentor = () => {
                             <span className="detail-label">No. Of Students</span>
                             <span className="detail-value">{mentor.studentCount || 0}</span>
                         </div>
-                        <button className="contact-button">Contact</button>
+                        {/* Favorite button, visible only when authenticated */}
+                        {isAuthenticated && (
+                            <button
+                                className="favorite-icon-btn"
+                                title={isFavorite ? "Remove from Favorites" : "Add to Favorites"}
+                                style={{ background: 'none', border: 'none', cursor: 'pointer', position: 'absolute', top: 16, right: 16 }}
+                                onClick={async () => {
+                                    try {
+                                        if (!isFavorite) {
+                                            const res = await fetch(`${apiUrl}/api/protected/user/favorites/add`, {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Authorization': `Bearer ${user.token}`,
+                                                    'Content-Type': 'application/json'
+                                                },
+                                                body: JSON.stringify({ mentorId: mentor._id })
+                                            });
+                                            if (!res.ok) throw new Error('Failed to add favorite');
+                                            setIsFavorite(true);
+                                        } else {
+                                            // Optionally implement remove favorite here
+                                            setIsFavorite(false);
+                                        }
+                                    } catch (err) {
+                                        alert('Failed to update favorite.');
+                                    }
+                                }}
+                            >
+                                <FontAwesomeIcon icon={isFavorite ? faHeartSolid : faHeartRegular} style={{ color: isFavorite ? 'red' : 'gray', fontSize: 22 }} />
+                            </button>
+                        )}
+                        {!isMentor && (
+                        <button
+                            className="contact-button"
+                            onClick={async () => {
+                                if (!isAuthenticated) {
+                                    openLoginModal();
+                                } else if (conversationStatus === 'active') {
+                                    window.location.href = '/learner/dashboard/message';
+                                } else if (conversationStatus === null) {
+                                    // Create a new conversation
+                                    try {
+                                        console.log("Sending request to create conversation with mentor:", mentor._id);
+                                        const res = await fetch(
+                                            `${apiUrl}/api/protected/user/conversations`,
+                                            {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Authorization': `Bearer ${user.token}`,
+                                                    'Content-Type': 'application/json'
+                                                },
+                                                credentials: 'include',
+                                                body: JSON.stringify({ mentorId: mentor._id })
+                                            }
+                                        );
+                                        if (res.ok) {
+                                            setConversationStatus('pending');
+                                        } else {
+                                            // Optionally handle error
+                                            alert('Failed to send request.');
+                                        }
+                                    } catch (err) {
+                                        alert('Failed to send request.');
+                                    }
+                                }
+                            }}
+                            disabled={conversationStatus === 'pending'}
+                        >
+                            {!isAuthenticated
+                                ? "Contact"
+                                : conversationStatus === 'active'
+                                    ? "Message"
+                                    : conversationStatus === 'pending'
+                                        ? "Request Sent"
+                                        : "Contact"}
+                        </button>
+                        )}
                     </div>
                 </div>
             </div>
