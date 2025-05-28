@@ -100,7 +100,13 @@ const ConversationSchema = new Schema({
   
   // Optional metadata
   title: String,
+
   isActive: {
+    type: Boolean,
+    default: false
+  },
+  
+  isPending: {
     type: Boolean,
     default: true
   }
@@ -109,7 +115,10 @@ const ConversationSchema = new Schema({
 });
 
 // Ensure unique conversation between participants
-ConversationSchema.index({ 'participants.id': 1 }, { unique: true });
+ConversationSchema.index(
+  { 'participants.id': 1, 'participants.role': 1 },
+  { unique: false }
+);
 
 const Message = mongoose.model('Message', MessageSchema, "message");
 const Conversation = mongoose.model('Conversation', ConversationSchema, "conversation");

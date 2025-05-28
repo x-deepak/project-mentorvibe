@@ -8,8 +8,7 @@ const UserSchema = new mongoose.Schema(
     password: { type: String},
     googleId: { type: String },
     profileImage: {
-      type: String,
-      default: 'https://example.com/default-avatar.png', //  default image URL
+      type: String, 
     },
     favoriteMentors: [
       {
