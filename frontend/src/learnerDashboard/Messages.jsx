@@ -16,6 +16,7 @@ const Messages = () => {
     { id: 2, sender: 'You', text: 'I need help with a data science project.' },
     { id: 3, sender: 'Harry', text: 'Sure! Let’s discuss the details.' },
   ]);
+  
   const [newMessage, setNewMessage] = useState('');
 
   // Ref to track the chat messages container

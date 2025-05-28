@@ -21,7 +21,7 @@
     --logo-text-color-inv: #6A55E2;
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
     :root {
         --border-btn: 1px solid rgb(220, 220, 220);
         --color-base-bg: rgb(18, 18, 18);
@@ -32,7 +32,7 @@
         --logo-text-color: #6A55E2;
         --logo-text-color-inv: #79DCAF;
     }
-}
+} */
 
 
 * {
